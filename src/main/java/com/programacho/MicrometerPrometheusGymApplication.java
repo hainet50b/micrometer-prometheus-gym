@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MicrometerPrometheusGymApplication {
     public static void main(String[] args) throws IOException {
-        PrometheusMeterRegistry registry = prometheusMeterRegistry();
+        PrometheusMeterRegistry registry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
 
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
@@ -42,15 +42,6 @@ public class MicrometerPrometheusGymApplication {
         });
 
         server.start();
-    }
-
-    private static PrometheusMeterRegistry prometheusMeterRegistry() {
-        PrometheusConfig config = k -> switch (k) {
-            case "prometheus.step" -> "1m";
-            default -> null;
-        };
-
-        return new PrometheusMeterRegistry(config);
     }
 
     private static void sleep(int timeout) {
